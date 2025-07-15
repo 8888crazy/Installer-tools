@@ -1,0 +1,72 @@
+name: "Auto Check Build iStoreOS Installer ISO"
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'  # 每30分钟检查一次（按需调整）
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch webpage
+        run: |
+          curl -s https://fw20.koolcenter.com/iStoreOS/x86_64_efi/version.latest -o current.html  # 替换你的URL
+
+      - name: Compare changes
+        id: diff
+        run: |
+          # 检查文件是否变化
+          if [ ! -f previous.html ]; then
+            echo "first_run=true" >> $GITHUB_OUTPUT
+            cp current.html previous.html
+          elif ! cmp -s current.html previous.html; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            mv current.html previous.html
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run action if changed
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          echo "检测到网页变化！执行任务..."
+          # 在此添加你的自定义脚本
+          # 示例：发送通知 ./send-alert.sh
+      - name: "Checking out git repository"
+        uses: actions/checkout@v2
+        
+      - name: Set executable permissions
+        run: |
+            chmod +x ${{ github.workspace }}/istoreos.sh
+            chmod +x ${{ github.workspace }}/supportFiles/istoreos/build.sh
+  
+      - name: "Build iStoreOS Installer ISO"
+        run: |
+            ./istoreos.sh
+        
+      - name: "Publish"
+        uses: softprops/action-gh-release@v2.2.1
+        with:
+          tag_name: "iStoreOS-Installer-x86_64-ISO"
+          body_path: ${{ github.workspace }}/supportFiles/istoreos/info.md
+          files: |
+            output/istoreos-installer-x86_64.iso
+          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
+
+
+      - name: Persist previous version
+        if: always()
+        run: |
+          # 保存当前版本供下次比较
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add previous.html
+          git commit -m "Update webpage snapshot" || echo "No changes to commit"
+          git push
+
