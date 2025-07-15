@@ -26,8 +26,8 @@ debootstrap --arch=amd64 --variant=minbase buster $HOME/LIVE_BOOT/chroot http://
 
 echo Copy supporting documents into the chroot
 cp -v /supportFiles/installChroot.sh $HOME/LIVE_BOOT/chroot/installChroot.sh
-cp -v /supportFiles/istoreos/ddd $HOME/LIVE_BOOT/chroot/usr/bin/ddd
-chmod +x $HOME/LIVE_BOOT/chroot/usr/bin/ddd
+cp -v /supportFiles/istoreos/menu $HOME/LIVE_BOOT/chroot/usr/bin/menu
+chmod +x $HOME/LIVE_BOOT/chroot/usr/bin/menu
 cp -v /supportFiles/sources.list $HOME/LIVE_BOOT/chroot/etc/apt/sources.list
 
 echo Mounting dev / proc / sys
