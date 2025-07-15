@@ -2,7 +2,7 @@ name: "Auto Check Build iStoreOS Installer ISO"
 
 on:
   schedule:
-    - cron: '*/30 * * * *'  # 每30分钟检查一次（按需调整）
+    - cron: '0 3 * * *'  # 每天凌晨3点检查一次（按需调整）
   workflow_dispatch:  # 允许手动触发
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
       - name: Compare changes
         id: diff
         run: |
-          # 检查文件是否变化
+          # 确保首次运行时创建基准文件，检查文件是否变化
           if [ ! -f previous.html ]; then
             echo "first_run=true" >> $GITHUB_OUTPUT
             cp current.html previous.html
@@ -31,7 +31,7 @@ jobs:
           fi
 
       - name: Run action if changed
-        if: steps.diff.outputs.changed == 'true'
+        if: steps.diff.outputs.changed == 'true' || steps.diff.outputs.first_run == 'true'
         run: |
           echo "检测到网页变化！执行任务..."
           # 在此添加你的自定义脚本
@@ -63,10 +63,14 @@ jobs:
       - name: Persist previous version
         if: always()
         run: |
-          # 保存当前版本供下次比较
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add previous.html
-          git commit -m "Update webpage snapshot" || echo "No changes to commit"
-          git push
+          # 确保文件存在再提交
+          if [ -f previous.html ]; then
+            git config user.name "github-actions"
+            git config user.email "actions@github.com"
+            git add previous.html
+            git commit -m "Update webpage snapshot [skip ci]" || echo "No changes to commit"
+            git push
+          else
+            echo "previous.html not found, skipping commit"
+          fi
 
