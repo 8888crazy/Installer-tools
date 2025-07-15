@@ -93,6 +93,7 @@ install_system() {
     
     echo "──────────────────────────────────────"
     echo "iStoreOS installed successfully:"
+	echo "──────────────────────────────────────"
 }
 
 while true; do
