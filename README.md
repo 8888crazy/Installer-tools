@@ -21,8 +21,8 @@
 - 【第三集 Hyper-V、绿联NAS虚拟机、飞牛虚拟机使用教程】 https://www.bilibili.com/video/BV1BoZVYsE7b
 - 【第四集 PVE虚拟机里如何使用img安装器】https://www.bilibili.com/video/BV1Rx5Qz4EZB
 
-6. 具体的操作方法是:在安装器所在系统里输入 `ddd` 命令 方可调出安装菜单
-   ![localhost lan - VMware ESXi 2025-03-20 10-14-45](https://github.com/user-attachments/assets/ddae80a0-9ff5-4d63-83b5-1f49da18b008)
+6. 具体的操作方法是:在安装器所在系统里输入 `menu` 命令 方可调出安装菜单
+   
 
 
 ## 项目说明和相关Feature
@@ -39,7 +39,7 @@
 ## ISO自动制作流程
 本项目也是基于开源项目[debian-live](https://github.com/dpowers86/debian-live)制作.因此我的代码也是全程开源 MIT协议不变。
 1. 首先构建一个debian live系统 该系统带EFI引导。
-2. 在该系统内融入我们需要的img镜像和自己制作的dd写盘脚本。一起打包到filesystem.squashfs文件系统中。该过程包含了压缩,从而保证了最终的体积较小。
+2. 在该系统内融入我们需要的img镜像和自己制作的menu写盘脚本。一起打包到filesystem.squashfs文件系统中。该过程包含了压缩,从而保证了最终的体积较小。
 3. 最后将新的squashfs文件和相关文件一起打包为ISO
 
 ## 项目参考
@@ -56,4 +56,3 @@
 
 ## ❤️赞助作者 ⬇️⬇️
 #### 项目开发不易 感谢您的支持鼓励。<br>
-[![点击这里赞助我](https://img.shields.io/badge/点击这里赞助我-支持作者的项目-orange?logo=github)](https://wkdaily.cpolar.cn/01) <br>
