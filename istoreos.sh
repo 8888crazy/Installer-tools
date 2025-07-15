@@ -3,10 +3,10 @@ mkdir -p openwrt
 
 REPO="wukongdaily/img-installer"
 TAG="2025-07-15"
-FILE_NAME="istoreos-24.10.2-2025071110-x86-64-squashfs-combined-efi.img.gz"
+FILE_NAME="istoreos-22.03.7-2025050912-x86-64-squashfs-combined-efi.img.gz"
 OUTPUT_PATH="openwrt/istoreos.img.gz"
 # DOWNLOAD_URL=$(curl -s https://api.github.com/repos/$REPO/releases/tags/$TAG | jq -r '.assets[] | select(.name == "'"$FILE_NAME"'") | .browser_download_url')
-DOWNLOAD_URL="https://dl.istoreos.com/iStoreOS/x86_64_efi/istoreos-24.10.2-2025071110-x86-64-squashfs-combined-efi.img.gz"
+DOWNLOAD_URL="https://dl.istoreos.com/iStoreOS/x86_64_efi/$FILE_NAME"
 
 if [[ -z "$DOWNLOAD_URL" ]]; then
   echo "错误：未找到文件 $FILE_NAME"
