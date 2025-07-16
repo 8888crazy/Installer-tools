@@ -5,7 +5,7 @@ on:
     - cron: '0 3 * * *'  # 每天凌晨3点检查一次（按需调整） UTC 时间 对应北京时间 11点
   workflow_dispatch:  # 允许手动触发
 
-jobs_tag:
+jobs: 
   check:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
     steps:
@@ -17,7 +17,7 @@ jobs_tag:
           LATEST_TAG=curl -s $URL | head -n 1 |cut -d '-' -f2
           LATEST_TIME=curl -s $URL | head -n 1 |cut -d '-' -f1
 
-          
+         
 
 jobs:
   check:
