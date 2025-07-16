@@ -8,6 +8,9 @@ on:
 jobs:
   jobs_tag:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
+    outputs:
+      LATEST_TAG: ${{ steps.get_tag.outputs.LATEST_TAG }}
+      LATEST_TIME: ${{ steps.get_tag.outputs.LATEST_TIME }}
     steps:
       - name: Get tag version
         id: get_tag
@@ -15,6 +18,8 @@ jobs:
           URL=https://fw.koolcenter.com/iStoreOS/x86_64_efi/version.index
           LATEST_TAG=curl -s $URL | head -n 1 |cut -d '-' -f2
           LATEST_TIME=curl -s $URL | head -n 1 |cut -d '-' -f1
+          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_OUTPUT
+          echo "LATEST_TIME=$LATEST_TIME" >> $GITHUB_OUTPUT
   
   check:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
@@ -61,7 +66,7 @@ jobs:
       - name: "Publish"
         uses: softprops/action-gh-release@v2.2.1
         with:
-          tag_name: "iStoreOS-$LATEST_TIME-$LATEST_TAG-Installer-x86_64-ISO"
+          tag_name: "iStoreOS-${{ needs.jobs_tag.outputs.LATEST_TIME }}-${{ needs.jobs_tag.outputs.LATEST_TAG }}-Installer-x86_64-ISO"
           body_path: ${{ github.workspace }}/supportFiles/istoreos/info.md
           files: |
             output/istoreos-installer-x86_64.iso
