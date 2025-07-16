@@ -1,6 +1,16 @@
 #!/bin/bash
 mkdir -p openwrt
 
+# 判断本脚本中的环境变量是否有效，如果无效则传入另外一个环境变量。
+if [ -z "$VLATEST_TAG" ]; then
+    LATEST_TAG=$LATEST22_TAG
+fi
+
+if [ -z "$VLATEST_TIME" ]; then
+    LATEST_TIME=$LATEST22_TIME
+fi
+
+
 # REPO="wukongdaily/img-installer"
 # TAG="2025-07-15"
 FILE_NAME="istoreos-$LATEST_TAG-$LATEST_TIME-x86-64-squashfs-combined-efi.img.gz"

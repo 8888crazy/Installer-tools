@@ -1,7 +1,7 @@
 #!/bin/bash
 # Based from https://willhaley.com/blog/custom-debian-live-environment/
 set -e
-
+# 传递文件名参数
 LATEST_TAG="$1"
 LATEST_TIME="$2"
 
