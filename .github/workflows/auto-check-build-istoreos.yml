@@ -6,7 +6,7 @@ on:
   workflow_dispatch:  # 允许手动触发
 
 jobs:
-  jobs_tag:
+  get_version:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
     outputs:
       LATEST_TAG: ${{ steps.get_tag.outputs.LATEST_TAG }}
@@ -15,14 +15,22 @@ jobs:
       - name: Get tag version
         id: get_tag
         run: |
-          URL=https://fw.koolcenter.com/iStoreOS/x86_64_efi/version.index
-          LATEST_TAG=curl -s $URL | head -n 1 |cut -d '-' -f2
-          LATEST_TIME=curl -s $URL | head -n 1 |cut -d '-' -f1
+          URL="https://fw.koolcenter.com/iStoreOS/x86_64_efi/version.index"
+          LINE=$(curl -s $URL | head -n 1)
+          
+          LATEST_TAG=$(echo $LINE | cut -d '-' -f2)
+          LATEST_TIME=$(echo $LINE | cut -d '-' -f1)
+          
           echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_OUTPUT
           echo "LATEST_TIME=$LATEST_TIME" >> $GITHUB_OUTPUT
+
+          # 调试输出
+          echo "Latest tag: $LATEST_TAG"
+          echo "Latest time: $LATEST_TIME"
   
-  check:
+  build-release:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
+    needs: get_version
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -52,7 +60,7 @@ jobs:
           # 在此添加你的自定义脚本
           # 示例：发送通知 ./send-alert.sh
       - name: "Checking out git repository"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         
       - name: Set executable permissions
         run: |
@@ -66,7 +74,7 @@ jobs:
       - name: "Publish"
         uses: softprops/action-gh-release@v2.2.1
         with:
-          tag_name: "iStoreOS-${{ needs.jobs_tag.outputs.LATEST_TIME }}-${{ needs.jobs_tag.outputs.LATEST_TAG }}-Installer-x86_64-ISO"
+          tag_name: "iStoreOS-${{ needs.get_version.outputs.LATEST_TIME }}-${{ needs.get_version.outputs.LATEST_TAG }}-Installer-x86_64-ISO"
           body_path: ${{ github.workspace }}/supportFiles/istoreos/info.md
           files: |
             output/istoreos-installer-x86_64.iso
