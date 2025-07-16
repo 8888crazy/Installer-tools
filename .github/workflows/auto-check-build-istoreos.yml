@@ -2,12 +2,12 @@ name: "Auto Check Build iStoreOS Installer ISO"
 
 on:
   schedule:
-    - cron: '0 3 * * *'  # 每天凌晨3点检查一次（按需调整）
+    - cron: '0 3 * * *'  # 每天凌晨3点检查一次（按需调整） UTC 时间 对应北京时间 11点
   workflow_dispatch:  # 允许手动触发
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
     steps:
       - name: Checkout
         uses: actions/checkout@v4

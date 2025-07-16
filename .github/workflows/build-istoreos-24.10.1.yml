@@ -1,7 +1,7 @@
 name: "Build iStoreOS 24.10.1 Installer ISO"
 
 on:
-workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   build-release:
