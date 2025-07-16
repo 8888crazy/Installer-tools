@@ -5,6 +5,7 @@ on:
     - cron: '0 3 * * *'  # 每天凌晨3点检查一次（按需调整） UTC 时间 对应北京时间 11点
   workflow_dispatch:  # 允许手动触发
 
+
 jobs:
   get_version:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
@@ -28,8 +29,12 @@ jobs:
           echo "Latest tag: $LATEST_TAG"
           echo "Latest time: $LATEST_TIME"
   
+ 
+
   build-release:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
+
+      
     needs: get_version
     steps:
       - name: Checkout
@@ -69,8 +74,11 @@ jobs:
   
       - name: "Build iStoreOS Installer ISO"
         run: |
-            ./istoreos.sh
-        
+            # 变量传递给shell脚本
+            LATEST_TAG="${{ needs.get_version.outputs.LATEST_TAG }}" \
+            LATEST_TIME="${{ needs.get_version.outputs.LATEST_TIME }}" \
+            ./istoreos.sh 
+            
       - name: "Publish"
         uses: softprops/action-gh-release@v2.2.1
         with:
