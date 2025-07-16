@@ -142,7 +142,7 @@ jobs:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
 
       
-    needs: [get_version,build-release-22]
+    needs: [get_version]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
