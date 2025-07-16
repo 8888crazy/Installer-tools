@@ -28,7 +28,17 @@ jobs:
           # 调试输出
           echo "Latest tag: $LATEST_TAG"
           echo "Latest time: $LATEST_TIME"
-  
+          
+          # 增加22.03.x固件的打包
+          URL22="https://fw.koolcenter.com/iStoreOS/x86_64_efi/"
+          LINE22=$(curl -s $URL22 | grep -oE 'istoreos-22[^[:space:]]*\.img\.gz' |grep -v ">" |head -n 1)
+
+          LATEST22_TAG=$(echo $LINE22 | cut -d "-" -f2)
+          LATEST22_TIME=$(echo $LINE22 | cut -d "-" -f2)
+
+          # 调试输出
+          echo "Latest tag: $LATEST22_TAG"
+          echo "Latest time: $LATEST22_TIME"
  
 
   build-release:
