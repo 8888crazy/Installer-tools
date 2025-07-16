@@ -77,7 +77,7 @@ jobs:
           tag_name: "iStoreOS-${{ needs.get_version.outputs.LATEST_TIME }}-${{ needs.get_version.outputs.LATEST_TAG }}-Installer-x86_64-ISO"
           body_path: ${{ github.workspace }}/supportFiles/istoreos/info.md
           files: |
-            output/istoreos-installer-x86_64.iso
+            output/istoreos-${{ needs.get_version.outputs.LATEST_TIME }}-${{ needs.get_version.outputs.LATEST_TAG }}-installer-x86_64.iso
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
