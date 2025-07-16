@@ -2,6 +2,9 @@
 # Based from https://willhaley.com/blog/custom-debian-live-environment/
 set -e
 
+LATEST_TAG="$1"
+LATEST_TIME="$2"
+
 echo "🔧 修复 buster 的源..."
 
 cat > /etc/apt/sources.list <<EOF
