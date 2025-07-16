@@ -17,6 +17,7 @@ jobs:
 
   get_version:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
+    needs: get_t
     outputs:
       LATEST_TAG: ${{ steps.get_tag.outputs.LATEST_TAG }}
       LATEST_TIME: ${{ steps.get_tag.outputs.LATEST_TIME }}
@@ -48,15 +49,15 @@ jobs:
           LATEST22_TAG=$(echo $LINE22 | cut -d "-" -f2)
           LATEST22_TIME=$(echo $LINE22 | cut -d "-" -f3)
 
-          echo "LATEST_TAG=$LATEST22_TAG" >> $GITHUB_OUTPUT
-          echo "LATEST_TIME=$LATEST22_TIME" >> $GITHUB_OUTPUT
+          echo "LATEST22_TAG=$LATEST22_TAG" >> $GITHUB_OUTPUT
+          echo "LATEST22_TIME=$LATEST22_TIME" >> $GITHUB_OUTPUT
 
           # 调试输出
           echo "Latest tag: $LATEST22_TAG"
           echo "Latest time: $LATEST22_TIME"
 
 
-  build-release-22:
+  build-release-22.x:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务  
     needs: get_version
     steps:
@@ -130,7 +131,7 @@ jobs:
         
                   
 
-  build-release:
+  build-release-24.X:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
 
       
