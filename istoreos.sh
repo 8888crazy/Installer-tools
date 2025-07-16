@@ -4,10 +4,14 @@ mkdir -p openwrt
 # 判断本脚本中的环境变量是否有效，如果无效则传入另外一个环境变量。
 if [ -z "$VLATEST_TAG" ]; then
     LATEST_TAG=$LATEST22_TAG
+else
+    LATEST_TAG=$LATEST_TAG
 fi
 
 if [ -z "$VLATEST_TIME" ]; then
     LATEST_TIME=$LATEST22_TIME
+else
+    LATEST_TIME=$LATEST_TIME
 fi
 
 
