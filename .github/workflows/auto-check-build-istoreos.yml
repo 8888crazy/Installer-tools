@@ -7,11 +7,23 @@ on:
 
 
 jobs:
+  get_t:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Get tag version
+      run: |
+        echo "ISTOREOS_TAG=$(date -u +'%Y%m%d%H%M')" >> $GITHUB_ENV
+        
+
   get_version:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
     outputs:
       LATEST_TAG: ${{ steps.get_tag.outputs.LATEST_TAG }}
       LATEST_TIME: ${{ steps.get_tag.outputs.LATEST_TIME }}
+
+      LATEST22_TAG: ${{ steps.get_tag.outputs.LATEST22_TAG }}
+      LATEST22_TIME: ${{ steps.get_tag.outputs.LATEST22_TIME }}
+
     steps:
       - name: Get tag version
         id: get_tag
@@ -34,12 +46,86 @@ jobs:
           LINE22=$(curl -s $URL22 | grep -oE 'istoreos-22[^[:space:]]*\.img\.gz' |grep -v ">" |head -n 1)
 
           LATEST22_TAG=$(echo $LINE22 | cut -d "-" -f2)
-          LATEST22_TIME=$(echo $LINE22 | cut -d "-" -f2)
+          LATEST22_TIME=$(echo $LINE22 | cut -d "-" -f3)
 
           # 调试输出
           echo "Latest tag: $LATEST22_TAG"
           echo "Latest time: $LATEST22_TIME"
- 
+
+
+  build-release-22:
+    runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务  
+    needs: get_version
+    steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+        
+        - name: Fetch webpage
+          run: |
+            curl -s https://fw20.koolcenter.com/iStoreOS/x86_64_efi/version.latest -o current.html  # 替换你的URL
+        
+        - name: Compare changes
+          id: diff
+          run: |
+            # 确保首次运行时创建基准文件，检查文件是否变化
+            if [ ! -f previous.html ]; then
+            echo "first_run=true" >> $GITHUB_OUTPUT
+            cp current.html previous.html
+            elif ! cmp -s current.html previous.html; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            mv current.html previous.html
+            else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            fi
+        
+        - name: Run action if changed
+          if: steps.diff.outputs.changed == 'true' || steps.diff.outputs.first_run == 'true'
+          run: |
+              echo "检测到网页变化！执行任务..."
+              # 在此添加你的自定义脚本
+              # 示例：发送通知 ./send-alert.sh
+        - name: "Checking out git repository"
+          uses: actions/checkout@v4
+                
+        - name: Set executable permissions
+          run: |
+              chmod +x ${{ github.workspace }}/istoreos.sh
+              chmod +x ${{ github.workspace }}/supportFiles/istoreos/build.sh
+          
+        - name: "Build iStoreOS Installer ISO"
+          run: |
+            # 变量传递给shell脚本
+            LATEST22_TAG="${{ needs.get_version.outputs.LATEST22_TAG }}" \
+            LATEST22_TIME="${{ needs.get_version.outputs.LATEST22_TIME }}" \
+            ./istoreos.sh 
+                    
+        - name: "Publish"
+          uses: softprops/action-gh-release@v2.2.1
+          with:
+            tag_name: "iStoreOS-Installer-x86_64-ISO-$ISTOREOS_TAG"
+            body_path: ${{ github.workspace }}/supportFiles/istoreos/info.md
+            files: |
+              output/istoreos-${{ needs.get_version.outputs.LATEST22_TAG }}-${{ needs.get_version.outputs.LATEST22_TIME }}-installer-x86_64.iso
+            token: ${{ secrets.GITHUB_TOKEN }}
+          env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
+        
+        
+        - name: Persist previous version
+          if: always()
+          run: |
+            # 确保文件存在再提交
+            if [ -f previous.html ]; then
+                git config user.name "github-actions"
+                git config user.email "actions@github.com"
+                git add previous.html
+                git commit -m "Update webpage snapshot [skip ci]" || echo "No changes to commit"
+                git push
+            else
+                echo "previous.html not found, skipping commit"
+            fi
+        
+                  
 
   build-release:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
