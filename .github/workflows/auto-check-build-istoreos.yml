@@ -72,13 +72,13 @@ jobs:
           run: |
             # 确保首次运行时创建基准文件，检查文件是否变化
             if [ ! -f previous.html ]; then
-            echo "first_run=true" >> $GITHUB_OUTPUT
-            cp current.html previous.html
+              echo "first_run=true" >> $GITHUB_OUTPUT
+              cp current.html previous.html
             elif ! cmp -s current.html previous.html; then
-            echo "changed=true" >> $GITHUB_OUTPUT
-            mv current.html previous.html
+              echo "changed=true" >> $GITHUB_OUTPUT
+              mv current.html previous.html
             else
-            echo "changed=false" >> $GITHUB_OUTPUT
+              echo "changed=false" >> $GITHUB_OUTPUT
             fi
         
         - name: Run action if changed
@@ -95,7 +95,7 @@ jobs:
               chmod +x ${{ github.workspace }}/istoreos.sh
               chmod +x ${{ github.workspace }}/supportFiles/istoreos/build.sh
           
-        - name: "Build iStoreOS Installer ISO"
+        - name: "Build iStoreOS Installer ISO 22.x"
           run: |
             # 变量传递给shell脚本
             LATEST22_TAG="${{ needs.get_version.outputs.LATEST22_TAG }}" \
@@ -134,7 +134,7 @@ jobs:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
 
       
-    needs: get_version
+    needs: [get_version,build-release-22]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
