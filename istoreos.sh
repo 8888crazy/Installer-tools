@@ -8,6 +8,10 @@ OUTPUT_PATH="openwrt/istoreos.img.gz"
 # DOWNLOAD_URL=$(curl -s https://api.github.com/repos/$REPO/releases/tags/$TAG | jq -r '.assets[] | select(.name == "'"$FILE_NAME"'") | .browser_download_url')
 DOWNLOAD_URL="https://dl.istoreos.com/iStoreOS/x86_64_efi/$FILE_NAME"
 
+echo "LATEST_TIME: $LATEST_TIME"
+echo "LATEST_TAG: $LATEST_TAG" 
+
+
 if [[ -z "$DOWNLOAD_URL" ]]; then
   echo "错误：未找到文件 $FILE_NAME"
   exit 1
