@@ -19,8 +19,8 @@ jobs:
           URL="https://fw.koolcenter.com/iStoreOS/x86_64_efi/version.index"
           LINE=$(curl -s $URL | head -n 1)
           
-          LATEST_TAG=$(echo $LINE | cut -d '-' -f2)
-          LATEST_TIME=$(echo $LINE | cut -d '-' -f1)
+          LATEST_TAG=$(echo $LINE | cut -d '-' -f1)
+          LATEST_TIME=$(echo $LINE | cut -d '-' -f2)
           
           echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_OUTPUT
           echo "LATEST_TIME=$LATEST_TIME" >> $GITHUB_OUTPUT
@@ -82,10 +82,10 @@ jobs:
       - name: "Publish"
         uses: softprops/action-gh-release@v2.2.1
         with:
-          tag_name: "iStoreOS-${{ needs.get_version.outputs.LATEST_TIME }}-${{ needs.get_version.outputs.LATEST_TAG }}-Installer-x86_64-ISO"
+          tag_name: "iStoreOS-${{ needs.get_version.outputs.LATEST_TAG }}-${{ needs.get_version.outputs.LATEST_TIME }}-Installer-x86_64-ISO"
           body_path: ${{ github.workspace }}/supportFiles/istoreos/info.md
           files: |
-            output/istoreos-${{ needs.get_version.outputs.LATEST_TIME }}-${{ needs.get_version.outputs.LATEST_TAG }}-installer-x86_64.iso
+            output/istoreos-${{ needs.get_version.outputs.LATEST_TAG }}-${{ needs.get_version.outputs.LATEST_TIME }}-installer-x86_64.iso
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
