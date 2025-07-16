@@ -38,4 +38,4 @@ docker run --privileged --rm \
         -v $(pwd)/supportFiles:/supportFiles:ro \
         -v $(pwd)/openwrt/istoreos.img:/mnt/istoreos.img \
         debian:buster \
-        /supportFiles/istoreos/build.sh
+        /supportFiles/istoreos/build.sh $LATEST_TAG $LATEST_TIME
