@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
     steps:
       - name: Get tag version
-        uses: actions/checkout@v4
         id: get_tag
         run: |
           URL=https://fw.koolcenter.com/iStoreOS/x86_64_efi/version.index
