@@ -48,6 +48,9 @@ jobs:
           LATEST22_TAG=$(echo $LINE22 | cut -d "-" -f2)
           LATEST22_TIME=$(echo $LINE22 | cut -d "-" -f3)
 
+          echo "LATEST_TAG=$LATEST22_TAG" >> $GITHUB_OUTPUT
+          echo "LATEST_TIME=$LATEST22_TIME" >> $GITHUB_OUTPUT
+
           # 调试输出
           echo "Latest tag: $LATEST22_TAG"
           echo "Latest time: $LATEST22_TIME"
