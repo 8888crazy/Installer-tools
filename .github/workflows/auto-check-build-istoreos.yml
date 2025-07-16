@@ -5,6 +5,20 @@ on:
     - cron: '0 3 * * *'  # 每天凌晨3点检查一次（按需调整） UTC 时间 对应北京时间 11点
   workflow_dispatch:  # 允许手动触发
 
+jobs_tag:
+  check:
+    runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
+    steps:
+      - name: Get tag version
+        uses: actions/checkout@v4
+        id: get_tag
+        run: |
+          URL=https://fw.koolcenter.com/iStoreOS/x86_64_efi/version.index
+          LATEST_TAG=curl -s $URL | head -n 1 |cut -d '-' -f2
+          LATEST_TIME=curl -s $URL | head -n 1 |cut -d '-' -f1
+
+          
+
 jobs:
   check:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
@@ -51,7 +65,7 @@ jobs:
       - name: "Publish"
         uses: softprops/action-gh-release@v2.2.1
         with:
-          tag_name: "iStoreOS-Installer-x86_64-ISO"
+          tag_name: "iStoreOS-$LATEST_TIME-$LATEST_TAG-Installer-x86_64-ISO"
           body_path: ${{ github.workspace }}/supportFiles/istoreos/info.md
           files: |
             output/istoreos-installer-x86_64.iso
