@@ -57,6 +57,13 @@ jobs:
           echo "Latest time: $LATEST22_TIME"
 
 
+
+
+
+
+
+
+
   build-release-22:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务  
     needs: get_version
@@ -98,10 +105,10 @@ jobs:
           
         - name: "Build iStoreOS Installer ISO 22.x"
           run: |
-            # 变量传递给shell脚本
-            LATEST22_TAG="${{ needs.get_version.outputs.LATEST22_TAG }}" \
-            LATEST22_TIME="${{ needs.get_version.outputs.LATEST22_TIME }}" \
-            ./istoreos.sh 
+              # 变量传递给shell脚本
+              LATEST22_TAG="${{ needs.get_version.outputs.LATEST22_TAG }}" \
+              LATEST22_TIME="${{ needs.get_version.outputs.LATEST22_TIME }}" \
+              ./istoreos.sh 
                     
         - name: "Publish"
           uses: softprops/action-gh-release@v2.2.1
