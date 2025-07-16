@@ -57,7 +57,7 @@ jobs:
           echo "Latest time: $LATEST22_TIME"
 
 
-  build-release-22.x:
+  build-release-22:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务  
     needs: get_version
     steps:
@@ -131,7 +131,7 @@ jobs:
         
                   
 
-  build-release-24.X:
+  build-release-24:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
 
       
