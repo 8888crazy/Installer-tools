@@ -12,7 +12,7 @@ jobs:
     steps:
     - name: Get tag version
       run: |
-        echo "ISTOREOS_TAG=$(date -u +'%Y%m%d%H%M')" >> $GITHUB_ENV
+        echo "ISTOREOS_TAG1=$(date -u +'%Y%m%d%H%M')" >> $GITHUB_ENV
         
 
   get_version:
@@ -24,6 +24,8 @@ jobs:
 
       LATEST22_TAG: ${{ steps.get_tag.outputs.LATEST22_TAG }}
       LATEST22_TIME: ${{ steps.get_tag.outputs.LATEST22_TIME }}
+
+      ISTOREOS_VER: ${{ steps.get_tag.outputs.ISTOREOS_VER }}
 
     steps:
       - name: Get tag version
@@ -53,13 +55,13 @@ jobs:
           echo "LATEST22_TIME=$LATEST22_TIME" >> $GITHUB_OUTPUT
 
           # 调试输出
-          echo "Latest tag: $LATEST22_TAG"
-          echo "Latest time: $LATEST22_TIME"
+          echo "Latest22 tag: $LATEST22_TAG"
+          echo "Latest22 time: $LATEST22_TIME"
 
-
-
-
-
+          # 定义版本号
+          
+          ISTOREOS_VER=$(date -u +'%Y%m%d%H')
+          echo "ISTOREOS_VER=$ISTOREOS_VER" >> $GITHUB_OUTPUT
 
 
 
@@ -113,7 +115,7 @@ jobs:
         - name: "Publish"
           uses: softprops/action-gh-release@v2.2.1
           with:
-            tag_name: "iStoreOS-Installer-x86_64-ISO-$ISTOREOS_TAG"
+            tag_name: "iStoreOS-Installer-x86_64-ISO-${{ needs.get_version.outputs.ISTOREOS_VER }}"
             body_path: ${{ github.workspace }}/supportFiles/istoreos/info.md
             files: |
               output/istoreos-${{ needs.get_version.outputs.LATEST22_TAG }}-${{ needs.get_version.outputs.LATEST22_TIME }}-installer-x86_64.iso
@@ -142,7 +144,7 @@ jobs:
     runs-on: ubuntu-22.04       # 使用ubuntu-22.04虚拟机执行任务
 
       
-    needs: [get_version]
+    needs: [get_version,build-release-22]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
