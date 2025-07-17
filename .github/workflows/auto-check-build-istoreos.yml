@@ -123,7 +123,7 @@ jobs:
           env:
               LATEST_TAG: ${{ env.LATEST_TAG }}
               LATEST_TIME: ${{ env.LATEST_TIME }}    
-              
+
         - name: "Publish"
           uses: softprops/action-gh-release@v2.2.1
           with:
@@ -203,7 +203,7 @@ jobs:
       - name: "Publish"
         uses: softprops/action-gh-release@v2.2.1
         with:
-          tag_name: "iStoreOS-${{ needs.get_version.outputs.LATEST_TAG }}-${{ needs.get_version.outputs.LATEST_TIME }}-Installer-x86_64-ISO"
+          tag_name: "iStoreOS-Installer-x86_64-ISO-${{ needs.get_version.outputs.ISTOREOS_VER }}"
           body_path: ${{ github.workspace }}/supportFiles/istoreos/info.md
           files: |
             output/istoreos-${{ needs.get_version.outputs.LATEST_TAG }}-${{ needs.get_version.outputs.LATEST_TIME }}-installer-x86_64.iso
