@@ -60,7 +60,7 @@ jobs:
 
           # 定义版本号
           
-          ISTOREOS_VER=$(date -u +'%Y%m%d%H')
+          ISTOREOS_VER=$(date -u +'%Y%m%d')
           echo "ISTOREOS_VER=$ISTOREOS_VER" >> $GITHUB_OUTPUT
 
           # 调试输出
