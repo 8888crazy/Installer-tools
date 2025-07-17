@@ -63,6 +63,9 @@ jobs:
           ISTOREOS_VER=$(date -u +'%Y%m%d%H')
           echo "ISTOREOS_VER=$ISTOREOS_VER" >> $GITHUB_OUTPUT
 
+          # 调试输出
+          echo "Istoreos_ver: $ISTOREOS_VER"
+
 
 
 
