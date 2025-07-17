@@ -108,17 +108,22 @@ jobs:
               chmod +x ${{ github.workspace }}/istoreos.sh
               chmod +x ${{ github.workspace }}/supportFiles/istoreos/build.sh
           
-        - name: "Build iStoreOS Installer ISO 22.x"
+        - name: Set LATEST_TAG LATEST_TIME ENV
           run: |
               # 将 SOURCE_VAR 赋值给 NEW_VAR
               echo "LATEST_TAG=${{ needs.get_version.outputs.LATEST22_TAG }}" >> $GITHUB_ENV
               echo "LATEST_TIME=${{ needs.get_version.outputs.LATEST22_TIME }}" >> $GITHUB_ENV
-
+        
+        - name: "Build iStoreOS Installer ISO 22.x"
+          run: |
               # 变量传递给shell脚本
               # LATEST_TAG="${{ needs.get_version.outputs.LATEST_TAG }}" \
               # LATEST_TIME="${{ needs.get_version.outputs.LATEST_TIME }}" \
               ./istoreos.sh 
-                    
+          env:
+              LATEST_TAG: ${{ env.LATEST_TAG }}
+              LATEST_TIME: ${{ env.LATEST_TIME }}    
+              
         - name: "Publish"
           uses: softprops/action-gh-release@v2.2.1
           with:
