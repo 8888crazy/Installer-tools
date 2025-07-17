@@ -110,9 +110,13 @@ jobs:
           
         - name: "Build iStoreOS Installer ISO 22.x"
           run: |
+              # 将 SOURCE_VAR 赋值给 NEW_VAR
+              echo "LATEST_TAG=${{ needs.get_version.outputs.LATEST22_TAG }}" >> $GITHUB_ENV
+              echo "LATEST_TIME=${{ needs.get_version.outputs.LATEST22_TIME }}" >> $GITHUB_ENV
+
               # 变量传递给shell脚本
-              LATEST22_TAG="${{ needs.get_version.outputs.LATEST22_TAG }}" \
-              LATEST22_TIME="${{ needs.get_version.outputs.LATEST22_TIME }}" \
+              # LATEST_TAG="${{ needs.get_version.outputs.LATEST_TAG }}" \
+              # LATEST_TIME="${{ needs.get_version.outputs.LATEST_TIME }}" \
               ./istoreos.sh 
                     
         - name: "Publish"

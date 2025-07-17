@@ -1,6 +1,6 @@
 #!/bin/bash
 mkdir -p openwrt
-
+echo "Start istoreos.sh running!"
 # 判断本脚本中的环境变量是否有效，如果无效则传入另外一个环境变量。
 
 # REPO="wukongdaily/img-installer"
